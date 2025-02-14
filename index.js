@@ -1,8 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const app = express();
-const PORT = 3000;
-const SECRET = 'mysecret';
+const PORT = process.env.PORT || 3000;
+const SECRET = process.env.SECRET;
 app.use(express.json());
 let users = [];
 
