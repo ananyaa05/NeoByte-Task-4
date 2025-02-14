@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+
+// .env
+SECRET=mysecret
+PORT=3000
