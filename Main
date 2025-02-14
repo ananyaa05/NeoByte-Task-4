@@ -1,0 +1,70 @@
+// Dockerfile
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "index.js"]
+
+// index.js (Express API)
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const app = express();
+const PORT = 3000;
+const SECRET = 'mysecret';
+app.use(express.json());
+let users = [];
+
+// Middleware for JWT authentication
+function authenticate(req, res, next) {
+  const token = req.headers['authorization'];
+  if (!token) return res.sendStatus(401);
+  jwt.verify(token, SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+}
+
+// Routes
+app.post('/login', (req, res) => {
+  const { username } = req.body;
+  const token = jwt.sign({ username }, SECRET, { expiresIn: '1h' });
+  res.json({ token });
+});
+app.post('/users', authenticate, (req, res) => {
+  const user = req.body;
+  users.push(user);
+  res.status(201).json(user);
+});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// .github/workflows/main.yml
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+      - name: Build Docker image
+        run: docker build -t my-api .
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Staging
+        run: echo "Deploying to staging environment..."
