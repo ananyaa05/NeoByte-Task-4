@@ -1,4 +1,4 @@
-# Neobyte-Task-4
+# NeoByte-Task-4
 Advanced API with CI/CD Pipeline and Automated Testing
 
 This project is a RESTful API built with Express.js, Dockerized, and automated using a CI/CD pipeline via GitHub Actions. It supports CRUD operations, JWT-based authentication, and automated deployment to a staging environment. The API is designed to handle user management with endpoints for login and user creation, where access to protected routes is secured via JWT tokens.
