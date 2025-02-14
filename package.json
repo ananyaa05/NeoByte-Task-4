@@ -14,5 +14,6 @@
   },
   "engines": {
     "node": "^18"
-  }
+  },
+  "packageManager": "npm@9"
 }
