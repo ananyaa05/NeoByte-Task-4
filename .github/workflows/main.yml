@@ -7,18 +7,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install dependencies
-        run: npm install
+      - name: Clean npm cache
+        run: npm cache clean --force
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
       - name: Run tests
         run: npm test
       - name: Build Docker image
-        run: docker build -t my-api .
+        run: docker build --no-cache -t my-api .
   deploy:
     needs: build
     runs-on: ubuntu-latest
